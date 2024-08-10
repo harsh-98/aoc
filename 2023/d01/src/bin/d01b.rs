@@ -27,7 +27,7 @@ fn main() {
         "{:?}",
         include_str!("../input.txt")
             .split("\n")
-            .map(|s| {
+            .filter_map(|s| {
                 let (mut min, mut max) = (s.len(), -1);
                 let (mut first, mut last) = (-1, -1);
                 for (k,&v) in digitals.iter() {
@@ -42,8 +42,12 @@ fn main() {
                         }
                     }
                 }
-                println!("{} {}", first, last);
-                first*10+ last
+                if first == -1 || last ==-1 {
+                    println!("{} {}", first, last);
+                    None
+                } else {
+                    Some(first*10+ last)
+                }
             })
             .sum::<i32>()
     );
