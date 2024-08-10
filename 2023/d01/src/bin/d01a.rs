@@ -1,22 +1,13 @@
 fn main() {
     println!(
         "{:?}",
-        include_str!("../input.txt")
-            .split("\n")
-            .map(|s| {
-                let mut first = -1;
-                let mut last = 0;
-                for i in s.chars() {
-                    let d = i as u32 - '0' as u32;
-                    if (i as u32 - '0' as u32) < 10 {
-                        if first == -1 {
-                            first = d as i32;
-                        }
-                        last = d as i32;
-                    }
-                }
-                first * 10 + last
-            })
-            .sum::<i32>()
+        include_str!("../input.txt").lines().map(|s| s.chars().filter_map(|c: char| {
+            let a =c as i32 - '0' as i32;
+            if a < 10 && a >= 0 {
+                Some(a)
+            } else {
+                None
+            }
+        }).collect::<Vec<i32>>()).map(|s: Vec<i32> | s.first().unwrap()*10+ s.last().unwrap() ).sum::<i32>()
     );
 }

@@ -1,65 +1,49 @@
+use std::collections::HashMap;
 fn main() {
-    let digitals: Vec<&str> = vec![
-        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
-    ];
+    let digitals    = HashMap::<&str, i32>::from([
+        ("one", 1),
+        ("two", 2),
+        ("three", 3),
+        ("four", 4),
+        ("five", 5),
+        ("six", 6),
+        ("seven", 7),
+        ("eight", 8),
+        ("nine", 9),
+        ("zero", 0),
+        ("1", 1),
+        ("2", 2),
+        ("3", 3),
+        ("4", 4),
+        ("5", 5),
+        ("6", 6),
+        ("7", 7),
+        ("8", 8),
+        ("9", 9),
+        ("0", 0),
+
+    ]);
     println!(
         "{:?}",
         include_str!("../input.txt")
             .split("\n")
-            .filter_map(|s| {
-                let letters = s.chars().collect::<Vec<char>>();
-                let l = letters.len();
-                let mut first = -1;
-                let mut last = 0;
-                for i in 0..(l - 2) {
-                    let mut number = -1;
-                    let d = letters[i] as i32 - '0' as i32;
-                    if d >= 0 && d < 10 {
-                        number = d;
-                    } else {
-                        let l3 = s.get(i..(i + 3)).unwrap();
-                        if let Some(index) = digitals.iter().position(|&r| r == l3) {
-                            number = index as i32 + 1;
+            .map(|s| {
+                let (mut min, mut max) = (s.len(), -1);
+                let (mut first, mut last) = (-1, -1);
+                for (k,&v) in digitals.iter() {
+                    if let Some(ind) = s.find(k) {
+                        if ind < min {
+                            min = ind;
+                            first =  v;
                         }
-                        {
-                            if l > 3 && i < l - 3 {
-                                let l4 = s.get(i..(i + 4)).unwrap();
-                                if let Some(index) = digitals.iter().position(|&r| r == l4) {
-                                    number = index as i32 + 1;
-                                }
-                            }
-                        }
-                        {
-                            if l > 4 && i < l - 4 {
-                                let l5 = s.get(i..(i + 5)).unwrap();
-                                if let Some(index) = digitals.iter().position(|&r| r == l5) {
-                                    number = index as i32 + 1;
-                                }
-                            }
+                        if ind as i32 > max as i32{
+                            max = ind as i32;
+                            last = v;
                         }
                     }
-                    if number >= 0 {
-                        if first == -1 {
-                            first = number as i32;
-                        }
-                        last = number as i32;
-                    }
                 }
-                for sub in 1..=2 {
-                    let number = letters[l + sub - 3] as i32 - '0' as i32;
-                    if number >= 0 && number < 10 {
-                        if first == -1 {
-                            first = number;
-                        }
-                        last = number;
-                    }
-                }
-
-                if first == -1 {
-                    return None;
-                } else {
-                    Some(first * 10 + last)
-                }
+                println!("{} {}", first, last);
+                first*10+ last
             })
             .sum::<i32>()
     );
